@@ -1,11 +1,11 @@
 {
-  "slug": "kananelo-chabeli",
-  "name": "Kananelo Chabeli",
-  "role": "MSc candidate",
-  "img": "/assets/team/kananelo-chabeli.svg",
-  "desc": "MSc candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
-  "honors": [],
   "personal": "",
+  "img": "/assets/team/whatsapp-image-2026-09-11-at-15.30.09.jpeg",
+  "honors": [],
+  "name": "Kananelo Chabeli",
+  "slug": "kananelo-chabeli",
   "order": 3,
+  "desc": "Kananelo Chabeli is an electrical and computer engineer and researcher working at the intersection of artificial intelligence, cybersecurity, and cyber-physical systems. His research is driven by the challenge of deploying intelligent and secure technologies in real-world environments where computational resources, network conditions, and physical constraints cannot be ignored.\n\nHe holds a BSc(Eng) in Electrical and Computer Engineering from the University of Cape Town (UCT), where he received multiple Dean’s Merit Awards, and is currently pursuing an MSc in Electrical Engineering at UCT. His current research focuses on smart surveillance using unmanned aerial vehicles (UAVs), investigating the integration of computer vision, edge AI, real-time processing, object detection, person recognition, multi-object tracking, and autonomous navigation on resource-constrained aerial platforms. A central theme of this work is the design of intelligent systems that can make timely decisions at the edge rather than relying exclusively on computationally intensive remote infrastructure.",
+  "role": "MSc candidate",
   "group": "postgraduate"
 }

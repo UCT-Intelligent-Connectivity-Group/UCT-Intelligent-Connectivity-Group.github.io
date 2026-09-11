@@ -5,34 +5,29 @@ import { team } from '../../data/team';
 import { getPublicationPrimaryHref, getPublicationImage } from '../../utils/publications';
 import PublicationSummary from '../../components/PublicationSummary.astro';
 
-export async function getStaticPaths() {
-  const normalizeAuthorName = (name: string) => name
-    .normalize('NFKD')
-    .replace(/\p{M}/gu, '')
-    .replace(/[^\p{L}\p{N}]+/gu, ' ')
-    .trim()
-    .toLowerCase();
-
-  const publications = (await getCollection('publications'))
-    .filter((publication) => !publication.data.draft)
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
-  return team.map((member) => {
-    const authorNames = new Set(
-      [member.name, member.nameZh, ...(member.publicationNames ?? [])]
-        .filter((name): name is string => Boolean(name))
-        .map(normalizeAuthorName)
-    );
-    const pubs = publications.filter((publication) =>
-      publication.data.authors.some((author) => authorNames.has(normalizeAuthorName(author)))
-    );
-
-    return {
-      params: { slug: member.slug },
-      props: { member, pubs },
-    };
-  });
+export function getStaticPaths() {
+  // Cache route names only; member data must be read again after CMS saves.
+  return team.map((member) => ({ params: { slug: member.slug } }));
 }
+
+const member = team.find((member) => member.slug === Astro.params.slug);
+if (!member) return Astro.redirect('/our-team/');
+
+const normalizeAuthorName = (name: string) => name
+  .normalize('NFKD')
+  .replace(/\p{M}/gu, '')
+  .replace(/[^\p{L}\p{N}]+/gu, ' ')
+  .trim()
+  .toLowerCase();
+const authorNames = new Set(
+  [member.name, member.nameZh, ...(member.publicationNames ?? [])]
+    .filter((name): name is string => Boolean(name))
+    .map(normalizeAuthorName)
+);
+const pubs = (await getCollection('publications'))
+  .filter((publication) => !publication.data.draft &&
+    publication.data.authors.some((author) => authorNames.has(normalizeAuthorName(author))))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const publicationLinks = (publication: CollectionEntry<'publications'>) => {
   const primaryUrl = getPublicationPrimaryHref(publication);
@@ -61,7 +56,6 @@ const publicationLinks = (publication: CollectionEntry<'publications'>) => {
   return links;
 };
 
-const { member, pubs } = Astro.props;
 const honors = member.honors;
 ---
 <BaseLayout title={`${member.name} | Intelligent Connectivity Group`} description={`Profile page of ${member.name}.`} headerMode="glass" bodyClass="archive-light-theme">
