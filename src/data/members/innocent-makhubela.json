@@ -1,11 +1,13 @@
 {
-  "slug": "innocent-makhubela",
-  "name": "Innocent Makhubela",
-  "role": "MSc candidate",
-  "img": "/assets/team/innocent-makhubela.svg",
-  "desc": "MSc candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
-  "honors": [],
   "personal": "",
+  "img": "/assets/team/whatsapp-image-2026-09-11-at-14.37.02.jpeg",
+  "honors": [],
+  "name": "Innocent Nhlanhla Makhubela",
+  "slug": "innocent-makhubela",
   "order": 4,
+  "homepage": "",
+  "desc": "MSc candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
+  "role": "MSc candidate",
+  "email": "Mkhinn011@myuct.ac.za",
   "group": "postgraduate"
 }

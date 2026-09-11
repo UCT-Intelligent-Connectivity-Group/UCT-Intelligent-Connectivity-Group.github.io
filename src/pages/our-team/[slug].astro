@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { team } from '../../data/team';
 import { getPublicationPrimaryHref, getPublicationImage } from '../../utils/publications';
+import PublicationSummary from '../../components/PublicationSummary.astro';
 
 export async function getStaticPaths() {
   const normalizeAuthorName = (name: string) => name
@@ -157,6 +158,7 @@ const honors = member.honors;
                     <a class="pub-title" href={getPublicationPrimaryHref(pub)}>{pub.data.title}</a>
                     <p class="pub-authors">{pub.data.authors.join(', ')}</p>
                     <p class="pub-venue">{pub.data.venue}</p>
+                    <PublicationSummary item={pub} />
                     <div class="pub-links">
                       {publicationLinks(pub).map((link) => (
                         <a
@@ -372,10 +374,12 @@ const honors = member.honors;
   .pub-thumb img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: #fff;
   }
 
   .pub-info {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 6px;

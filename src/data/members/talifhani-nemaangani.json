@@ -1,11 +1,12 @@
 {
-  "slug": "talifhani-nemaangani",
-  "name": "Talifhani Nemaangani",
-  "role": "MSc candidate",
-  "img": "/assets/team/talifhani-nemaangani.svg",
-  "desc": "MSc candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
-  "honors": [],
   "personal": "",
+  "img": "/assets/team/whatsapp-image-2026-09-11-at-14.52.08.jpeg",
+  "honors": [],
+  "name": "Talifhani Nemaangani",
+  "slug": "talifhani-nemaangani",
   "order": 5,
+  "desc": "MSc candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
+  "role": "MSc candidate",
+  "email": "NMNTAL002@myuct.ac.za",
   "group": "postgraduate"
 }

@@ -1,11 +1,12 @@
 {
-  "slug": "anvil-nel",
-  "name": "Anvil Nel",
-  "role": "MSc candidate",
-  "img": "/assets/team/anvil-nel.svg",
-  "desc": "MSc candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
-  "honors": [],
   "personal": "",
+  "img": "/assets/team/whatsapp-image-2026-09-11-at-15.10.23.jpeg",
+  "honors": [],
+  "name": "Anvil Nel",
+  "slug": "anvil-nel",
   "order": 7,
+  "desc": "MSc candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
+  "role": "MSc candidate",
+  "email": "NLXANV001@myuct.ac.za",
   "group": "postgraduate"
 }

@@ -348,11 +348,13 @@
           "name": "draft",
           "label": "Draft (hide from website)",
           "widget": "boolean",
-          "default": true
+          "default": true,
+          "hint": "Turn this off to show the publication on the website and matching author profiles."
         },
         {
           "name": "image",
           "label": "Cover image",
+          "hint": "Upload a figure from the paper to show on publication cards. The whole image is displayed without cropping.",
           "widget": "image",
           "required": false,
           "media_folder": "/public/assets/uploads",
@@ -366,7 +368,16 @@
         {
           "name": "authors",
           "label": "Authors",
-          "widget": "list"
+          "widget": "list",
+          "field": {
+            "name": "author",
+            "label": "Author name",
+            "widget": "string"
+          },
+          "label_singular": "Author",
+          "collapsed": false,
+          "min": 1,
+          "hint": "Add each author separately, in paper order. To link a profile, use the member’s name or a name listed in their “Names used on publications” field."
         },
         {
           "name": "paperUrl",

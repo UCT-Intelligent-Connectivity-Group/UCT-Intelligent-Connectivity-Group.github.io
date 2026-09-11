@@ -1,6 +1,7 @@
 ---
 import { getPublicationPrimaryHref, getPublicationImage } from '../utils/publications';
 import { getContentPrimaryHref } from '../utils/contentLinks';
+import PublicationSummary from './PublicationSummary.astro';
 
 const { item, kind } = Astro.props;
 
@@ -29,20 +30,20 @@ const dateZh = item.data.pubDate.toLocaleDateString('zh-CN', {
 ---
 
 <article class="research-feed-card">
-  <a href={href}>
-    <span class="research-feed-media">
+  <div class="research-feed-body">
+    <a class:list={['research-feed-media', { 'is-publication': kind === 'publication' }]} href={href} aria-label={`View ${titleEn}`}>
       <img src={getPublicationImage(item)} alt="" loading="lazy" decoding="async" />
-    </span>
-    <span class="research-feed-content">
+    </a>
+    <div class="research-feed-content">
       <span class="research-feed-eyebrow" data-en={eyebrowEn} data-zh={eyebrowZh}>{eyebrowEn}</span>
-      <strong data-en={titleEn} data-zh={titleZh}>{titleEn}</strong>
-      <span class="research-feed-description" data-en={descriptionEn} data-zh={descriptionZh}>{descriptionEn}</span>
+      <a class="research-feed-title" href={href} data-en={titleEn} data-zh={titleZh}>{titleEn}</a>
+      {kind === 'publication' ? <PublicationSummary item={item} /> : <span class="research-feed-description" data-en={descriptionEn} data-zh={descriptionZh}>{descriptionEn}</span>}
       <span class="research-feed-footer">
         <span>{meta}</span>
         <time datetime={item.data.pubDate.toISOString()} data-en={dateEn} data-zh={dateZh}>{dateEn}</time>
       </span>
-    </span>
-  </a>
+    </div>
+  </div>
 </article>
 
 <style>
@@ -62,7 +63,7 @@ const dateZh = item.data.pubDate.toLocaleDateString('zh-CN', {
     transform: translateY(-3px);
   }
 
-  .research-feed-card > a {
+  .research-feed-body {
     display: flex;
     min-height: 440px;
     flex-direction: column;
@@ -88,6 +89,8 @@ const dateZh = item.data.pubDate.toLocaleDateString('zh-CN', {
     transform: scale(1.025);
   }
 
+  .research-feed-media.is-publication img { object-fit: contain; background: #fff; transform: none; }
+
   .research-feed-content {
     display: flex;
     flex: 1;
@@ -103,7 +106,7 @@ const dateZh = item.data.pubDate.toLocaleDateString('zh-CN', {
     text-transform: uppercase;
   }
 
-  .research-feed-content > strong {
+  .research-feed-title {
     display: -webkit-box;
     margin-top: 14px;
     overflow: hidden;
@@ -114,6 +117,8 @@ const dateZh = item.data.pubDate.toLocaleDateString('zh-CN', {
     letter-spacing: 0;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+    color: #151515;
+    margin-bottom: 14px;
   }
 
   .research-feed-description {

@@ -1,0 +1,95 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getPublicationImage } from '../utils/publications';
+
+interface Props { item: CollectionEntry<'publications'>; }
+const { item } = Astro.props;
+const titleId = `publication-summary-${crypto.randomUUID()}`;
+---
+
+<icg-publication-summary>
+  <div class="publication-excerpt">{item.data.description}</div>
+  <a class="publication-read-more" href={`/publications/${item.id}/`} data-summary-open aria-haspopup="dialog">Read more <span aria-hidden="true">→</span></a>
+  <dialog class="publication-dialog" data-publication-dialog aria-labelledby={titleId}>
+    <form method="dialog" class="publication-dialog-toolbar">
+      <button class="publication-dialog-close" aria-label="Close publication summary" autofocus>Close <span aria-hidden="true">×</span></button>
+    </form>
+    <div class="publication-dialog-content">
+      <h2 id={titleId} class="publication-dialog-title">{item.data.title}</h2>
+      <div class="publication-dialog-authors">{item.data.authors.join(', ')}</div>
+      <div class="publication-dialog-venue">{item.data.venue}</div>
+      <img class="publication-dialog-image" src={getPublicationImage(item)} alt={`Figure from ${item.data.title}`} loading="lazy" />
+      <h3 class="publication-dialog-label">Summary</h3>
+      <div class="publication-dialog-summary">{item.data.description}</div>
+      <a class="publication-read-more" href={item.data.paperUrl || `/publications/${item.id}/`}>View paper <span aria-hidden="true">↗</span></a>
+    </div>
+  </dialog>
+</icg-publication-summary>
+
+<script>
+  class PublicationSummary extends HTMLElement {
+    connectedCallback() {
+      if (this.dataset.ready) return;
+      this.dataset.ready = 'true';
+      const trigger = this.querySelector<HTMLAnchorElement>('[data-summary-open]');
+      const dialog = this.querySelector<HTMLDialogElement>('dialog');
+      trigger?.addEventListener('click', (event) => {
+        if (!dialog || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        dialog.showModal();
+      });
+      dialog?.addEventListener('click', (event) => {
+        if (event.target !== dialog) return;
+        const bounds = dialog.getBoundingClientRect();
+        if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+      });
+      dialog?.addEventListener('close', () => trigger?.focus({ preventScroll: true }));
+    }
+  }
+  if (!customElements.get('icg-publication-summary')) customElements.define('icg-publication-summary', PublicationSummary);
+</script>
+
+<style>
+  icg-publication-summary { display: block; min-width: 0; text-align: left; }
+  .publication-excerpt {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    max-height: 4.65em;
+    color: #555b61;
+    font-size: 15px;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+  }
+  .publication-read-more { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; color: #086c9c; font-size: 14px; font-weight: 650; }
+  .publication-read-more:hover { text-decoration: underline; }
+  .publication-read-more:focus-visible, .publication-dialog-close:focus-visible { outline: 2px solid #086c9c; outline-offset: 4px; }
+  .publication-dialog {
+    box-sizing: border-box;
+    width: min(760px, calc(100% - 32px));
+    max-width: none;
+    max-height: calc(100dvh - 32px);
+    margin: auto;
+    padding: 0;
+    border: 1px solid #d9e0e5;
+    border-radius: 16px;
+    color: #17232c;
+    background: #fff;
+    box-shadow: 0 24px 80px #061a3240;
+    overflow: auto;
+    overscroll-behavior: contain;
+    text-align: left;
+  }
+  .publication-dialog::backdrop { background: #061322b8; }
+  .publication-dialog-toolbar { position: sticky; top: 0; z-index: 1; display: flex; justify-content: flex-end; margin: 0; padding: 12px 16px; background: #fff; border-bottom: 1px solid #e5eaee; }
+  .publication-dialog-close { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; padding: 8px 14px; border: 1px solid #d9e0e5; border-radius: 8px; color: #17232c; background: #f4f7f9; font: inherit; cursor: pointer; }
+  .publication-dialog-content { padding: 24px 32px 32px; overflow-wrap: anywhere; }
+  .publication-dialog .publication-dialog-title { margin: 0 0 16px; font-family: 'Sora', sans-serif; font-size: clamp(21px, 3vw, 28px); line-height: 1.35; color: #17232c; }
+  .publication-dialog-authors, .publication-dialog-venue { margin-top: 8px; font-size: 14px; line-height: 1.5; color: #555b61; }
+  .publication-dialog-image { display: block; width: 100%; max-height: 320px; margin: 24px 0; object-fit: contain; background: #fff; }
+  .publication-dialog .publication-dialog-label { margin: 0 0 12px; color: #17232c; font-size: 18px; }
+  .publication-dialog-summary { color: #404c55; font-size: 16px; line-height: 1.75; white-space: pre-line; }
+  :global(html:has(dialog[data-publication-dialog][open])) { overflow: hidden; }
+  @media (max-width: 640px) { .publication-dialog-content { padding: 20px; } }
+</style>

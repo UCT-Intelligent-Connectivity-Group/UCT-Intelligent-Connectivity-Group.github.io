@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getPublicationPrimaryHref, getPublicationImage } from '../utils/publications';
+import PublicationSummary from './PublicationSummary.astro';
 
 interface Props {
   items?: CollectionEntry<'publications'>[];
@@ -46,6 +47,7 @@ const publicationItems = items.map((item) => ({
             <h3><a href={href}>{item.data.title}</a></h3>
             <p class="latest-publication-authors">{item.data.authors.join(', ')}</p>
             <p class="latest-publication-venue">{item.data.venue}</p>
+            <PublicationSummary item={item} />
             <a class="latest-publication-details" href={href}>
               <span>View Details</span>
               <span aria-hidden="true">→</span>
@@ -197,6 +199,7 @@ const publicationItems = items.map((item) => ({
     align-items: center;
     padding: 24px 26px 22px;
     text-align: center;
+    gap: 12px;
   }
 
   .latest-publication-content h3 {

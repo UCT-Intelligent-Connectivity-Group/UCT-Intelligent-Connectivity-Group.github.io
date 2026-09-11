@@ -1,5 +1,6 @@
 ---
 import { getPublicationPrimaryHref, getPublicationImage } from '../utils/publications';
+import PublicationSummary from './PublicationSummary.astro';
 
 const { item } = Astro.props;
 const tag = item.data.tags?.[0] ?? item.data.venue;
@@ -13,12 +14,22 @@ const searchText = [
 ].join(' ').toLowerCase();
 const filterText = (item.data.researchAreas ?? []).join('|').toLowerCase();
 ---
-<a class="card" href={href} data-publication-card data-search={searchText} data-filters={filterText}>
-  <span class="card-media">
-    <img class="card-image" src={getPublicationImage(item)} alt="" loading="lazy" />
-  </span>
+<article class="card publication-card" data-publication-card data-search={searchText} data-filters={filterText}>
+  <a class="card-media" href={href} aria-label={`View ${item.data.title}`}>
+    <img class="card-image" src={getPublicationImage(item)} alt={`Figure from ${item.data.title}`} loading="lazy" />
+  </a>
   <span class="tag-pill">{tag}</span>
-  <h3>{item.data.title}</h3>
-  <p>{item.data.description}</p>
+  <h3><a href={href}>{item.data.title}</a></h3>
+  <PublicationSummary item={item} />
   <span class="card-meta">{item.data.venue}</span>
-</a>
+</article>
+
+<style>
+  .publication-card { min-width: 0; }
+  .publication-card .card-media { background: #fff; }
+  .publication-card .card-image { display: block; aspect-ratio: 16 / 9; object-fit: contain; background: #fff; }
+  .publication-card:hover .card-image { transform: none; }
+  .publication-card h3 a { color: inherit; }
+  .publication-card .tag-pill { max-width: 100%; padding-block: 8px; font-size: 12px; line-height: 1.4; }
+  .publication-card .card-meta { display: block; margin-top: 16px; }
+</style>

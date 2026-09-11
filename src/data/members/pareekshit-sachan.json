@@ -1,11 +1,12 @@
 {
-  "slug": "pareekshit-sachan",
-  "name": "Pareekshit Sachan",
-  "role": "MSc candidate",
-  "img": "/assets/team/pareekshit-sachan.svg",
-  "desc": "MSc candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
-  "honors": [],
   "personal": "",
+  "img": "/assets/team/1746141489139.jpeg",
+  "honors": [],
+  "name": "Pareekshit Sachan",
+  "slug": "pareekshit-sachan",
   "order": 6,
+  "desc": "MSc candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
+  "role": "MSc candidate",
+  "email": "schpar001@myuct.ac.za",
   "group": "postgraduate"
 }

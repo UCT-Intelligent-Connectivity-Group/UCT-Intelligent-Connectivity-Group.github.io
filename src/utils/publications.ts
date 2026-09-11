@@ -33,9 +33,9 @@ const researchAreaFallbackImages: Record<string, string> = {
  * research area, so the archive grid stays visually consistent.
  */
 export const getPublicationImage = (publication: PublicationImageSource) =>
-  publication.data.image
-    ?? researchAreaFallbackImages[publication.data.researchAreas?.[0] ?? '']
-    ?? '/assets/cards/publication-blue.png';
+  publication.data.image?.trim()
+    || researchAreaFallbackImages[publication.data.researchAreas?.[0] ?? '']
+    || '/assets/research/software-networks.jpg';
 
 interface PublicationSortSource {
   data: {
