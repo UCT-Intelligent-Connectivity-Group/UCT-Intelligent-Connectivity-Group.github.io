@@ -1,0 +1,88 @@
+<div class="neural-space" data-neural-space aria-hidden="true">
+  <div class="neural-halo"></div>
+  <svg class="neural-poster" viewBox="0 0 800 800"><g fill="none" stroke="#258bad" stroke-width="1"><ellipse cx="400" cy="400" rx="280" ry="130" transform="rotate(-25 400 400)"/><ellipse cx="400" cy="400" rx="260" ry="170" transform="rotate(45 400 400)"/><circle cx="400" cy="400" r="210" stroke-dasharray="2 16"/></g></svg>
+  <canvas></canvas>
+</div>
+<button class="motion-toggle" type="button" data-motion-toggle aria-pressed="false">Pause animation</button>
+<script>
+  const scene = document.querySelector<HTMLElement>('[data-neural-space]');
+  const canvas = scene?.querySelector('canvas');
+  const ctx = canvas?.getContext('2d');
+  const button = document.querySelector<HTMLButtonElement>('[data-motion-toggle]');
+  if (scene && canvas && ctx && button) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let paused = reduced.matches, visible = true, frame = 0, time = 0, last = 0, width = 0, height = 0;
+    // A deterministic spiral of connected nodes: intelligence at the centre of an orbital network.
+    const points = Array.from({ length: 156 }, (_, i) => {
+      const t = i * 2.399963, radius = 0.16 + Math.sqrt(i / 156) * 0.81;
+      return { x: Math.cos(t) * radius, y: Math.sin(t) * radius, z: Math.sin(i * 1.77) * 0.34, size: i % 7 === 0 ? 2.5 : 1.3 };
+    });
+    const edges: [number, number][] = [];
+    points.forEach((a, i) => points.slice(i + 1).forEach((b, offset) => {
+      if (Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z) < 0.32) edges.push([i, i + offset + 1]);
+    }));
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+      const mobile = width < 760;
+      const cx = width * (mobile ? 0.69 : 0.75), cy = height * (mobile ? 0.73 : 0.53);
+      const size = Math.min(width * (mobile ? 0.61 : 0.32), height * 0.47);
+      const angle = time * 0.07;
+      const projected = points.map(p => {
+        const x = p.x * Math.cos(angle) - p.z * Math.sin(angle);
+        const z = p.x * Math.sin(angle) + p.z * Math.cos(angle);
+        return { x: cx + x * size, y: cy + (p.y * 0.88 + z * 0.24) * size, alpha: 0.35 + (z + 1) * 0.27, size: p.size };
+      });
+      // Sparse background stars stay calm while the neural constellation rotates.
+      for (let i = 0; i < 95; i++) {
+        const x = ((i * 0.6180339) % 1) * width, y = ((i * 0.4142136) % 1) * height;
+        ctx.fillStyle = `rgba(181,216,240,${0.16 + (i % 5) * 0.05})`;
+        ctx.fillRect(x, y, i % 8 === 0 ? 1.5 : 0.7, i % 8 === 0 ? 1.5 : 0.7);
+      }
+      for (let orbit = 0; orbit < 3; orbit++) {
+        ctx.save(); ctx.translate(cx, cy); ctx.rotate(-0.45 + orbit * 0.85);
+        ctx.strokeStyle = `rgba(73,170,209,${0.17 - orbit * 0.03})`; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.ellipse(0, 0, size * (1.16 + orbit * 0.12), size * 0.48, 0, 0, Math.PI * 2); ctx.stroke();
+        const a = time * (0.14 + orbit * 0.03) + orbit * 2;
+        ctx.fillStyle = '#8be1f0'; ctx.shadowBlur = 16; ctx.shadowColor = '#30bcdc';
+        ctx.beginPath(); ctx.arc(Math.cos(a) * size * (1.16 + orbit * 0.12), Math.sin(a) * size * 0.48, 3, 0, Math.PI * 2); ctx.fill();ctx.restore();
+      }
+      edges.forEach(([a,b], index) => {
+        const p = projected[a], q = projected[b];
+        ctx.strokeStyle = `rgba(68,159,194,${0.09 + (p.alpha + q.alpha) * 0.075})`;ctx.lineWidth = 0.8;
+        ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();
+        if (index % 17 === 0) {
+          const t = (time * 0.24 + index * 0.13) % 1;
+          ctx.fillStyle = 'rgba(141,226,243,.9)';ctx.beginPath();ctx.arc(p.x + (q.x-p.x)*t,p.y+(q.y-p.y)*t,1.8,0,Math.PI*2);ctx.fill();
+        }
+      });
+      projected.forEach(p => {ctx.fillStyle = `rgba(133,210,237,${Math.min(p.alpha,1)})`;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();});
+    };
+    const tick = (now: number) => {
+      frame = 0; if (paused || !visible || document.hidden) return;
+      time += last ? Math.min((now - last)/1000,0.05) : 0;last=now;draw();frame=requestAnimationFrame(tick);
+    };
+    const sync = () => {
+      cancelAnimationFrame(frame);frame=0;last=0;
+      button.textContent = paused ? 'Play animation' : 'Pause animation';
+      button.setAttribute('aria-pressed',String(paused));
+      scene.dataset.motion = paused ? 'paused' : 'playing';draw();
+      if (!paused && visible && !document.hidden) frame=requestAnimationFrame(tick);
+    };
+    const resize = () => { const bounds=scene.getBoundingClientRect();width=bounds.width;height=bounds.height;const dpr=Math.min(devicePixelRatio,2);canvas.width=width*dpr;canvas.height=height*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);draw(); };
+    new ResizeObserver(resize).observe(scene);
+    new IntersectionObserver(([entry]) => {visible=entry.isIntersecting;sync();},{threshold:0}).observe(scene);
+    button.addEventListener('click',()=>{paused=!paused;sync();});
+    reduced.addEventListener('change',()=>{paused=reduced.matches;sync();});
+    document.addEventListener('visibilitychange',sync);
+    resize();sync();scene.classList.add('is-ready');
+  }
+</script>
+<style>
+  .neural-space { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .neural-halo { position: absolute; width: 70%; aspect-ratio: 1; right: -10%; top: 0; background: radial-gradient(ellipse, #0f40566b 0%,#16335124 42%,transparent 69%); }
+  .neural-poster { position: absolute; right: -5%; height: 100%; width: 70%; opacity: .6; }
+  .is-ready .neural-poster { display: none; }
+  .motion-toggle { position: absolute; right: 32px; bottom: 32px; z-index: 4; border: 1px solid #2b4d5d; background: #071623b3; color: #bad5df; font: inherit; font-size: 11px; border-radius: 30px; min-height: 44px; padding: 0 18px; cursor: pointer; }
+  @media(max-width:760px) { .motion-toggle { right: 20px; bottom: 22px; } .neural-halo { top: 40%; width: 120%; right: -30%; } }
+</style>

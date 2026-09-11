@@ -1,0 +1,28 @@
+---
+import { getContentPrimaryHref } from '../utils/contentLinks';
+
+const { item } = Astro.props;
+const tag = item.data.tags?.[0] ?? 'News';
+const href = getContentPrimaryHref(item, 'news');
+const titleEn = item.data.titleEn ?? item.data.title;
+const titleZh = item.data.titleZh ?? item.data.title;
+const descriptionEn = item.data.descriptionEn ?? item.data.description;
+const descriptionZh = item.data.descriptionZh ?? item.data.description;
+const searchText = [
+  titleEn,
+  titleZh,
+  descriptionEn,
+  descriptionZh,
+  ...item.data.tags
+].join(' ').toLowerCase();
+const filterText = item.data.tags.join('|').toLowerCase();
+---
+<a class="card" href={href} data-news-card data-search={searchText} data-filters={filterText}>
+  <span class="card-media">
+    <img class="card-image" src={item.data.image} alt="" loading="lazy" />
+  </span>
+  <span class="tag-pill">{tag}</span>
+  <h3 data-en={titleEn} data-zh={titleZh}>{titleEn}</h3>
+  <p data-en={descriptionEn} data-zh={descriptionZh}>{descriptionEn}</p>
+  <span class="card-meta">{item.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+</a>

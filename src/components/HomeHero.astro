@@ -1,0 +1,30 @@
+---
+import NeuralSpace from './NeuralSpace.astro';
+import site from '../data/site.json';
+---
+<section class="home-hero" aria-labelledby="home-hero-title">
+  <NeuralSpace />
+  <div class="home-hero-content">
+    <p class="hero-eyebrow">{site.heroEyebrow}</p>
+    <h1 id="home-hero-title">{site.heroTitle}</h1>
+    <p class="home-hero-description">{site.heroDescription}</p>
+    <div class="home-hero-actions"><a class="home-hero-button is-primary" href="/research/">Explore research <span aria-hidden="true">↗</span></a><a class="home-hero-button" href="/our-team/">Meet our people</a></div>
+  </div>
+  <a href="#research-directions" class="hero-scroll"><span aria-hidden="true">↓</span> SCROLL TO EXPLORE</a>
+</section>
+<style>
+  .home-hero { position: relative; isolation: isolate; min-height: 760px; height: min(960px,100svh); overflow: hidden; background: #040c15; color: white; display: flex; align-items: center; padding: 130px max(28px,6.5vw) 120px; }
+  .home-hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg,#020a11 0%,#040c1500 75%); }
+  .home-hero-content { position: relative; z-index: 2; width: min(640px,55%); padding: 0; }
+  .hero-eyebrow { max-width: 470px; margin: 0 0 28px; color: #92c2d2; font-size: 10px; font-weight: 600; letter-spacing: .16em; line-height: 1.8; }
+  h1 { margin: 0; font-family: 'Sora',sans-serif; font-size: clamp(44px,4.8vw,72px); font-weight: 550; line-height: 1.12; letter-spacing: -.045em; white-space: pre-line; }
+  .home-hero-description { max-width: 470px; margin: 28px 0 32px; color: #b0c2cc; font-size: 16px; line-height: 1.8; }
+  .home-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+  .home-hero-button { display: inline-flex; align-items: center; justify-content: center; gap: 28px; padding: 15px 20px; min-height: 48px; border: 1px solid #45616f; border-radius: 5px; color: #e6f5fb; background: #081a25a6; font-size: 12px; font-weight: 550; transition: transform 180ms,background 180ms; }
+  .home-hero-button:hover { background: #153747; transform: translateY(-2px); }
+  .home-hero-button.is-primary { background: #007fa3; border-color: #007fa3; color: white; }
+  .home-hero-button.is-primary:hover { background: #006e8d; }
+  .hero-scroll { position: absolute; bottom: 44px; left: max(28px,6.5vw); display: flex; gap: 16px; align-items: center; font-size: 9px; letter-spacing: .17em; color: #7a9ead; }
+  .hero-scroll span { font-size: 20px; }
+  @media(max-width:760px) { .home-hero { min-height: 850px; height: auto; align-items: flex-start; padding: 138px 24px 380px; } .home-hero-content { width: 100%; max-width: 560px; } h1 { font-size: clamp(38px,8.7vw,56px); } .hero-eyebrow { font-size: 9px; margin-bottom: 22px; } .home-hero-description { font-size: 14px; max-width: 430px; line-height: 1.75; margin: 22px 0 26px; } .hero-scroll { left: 24px; bottom: 38px; font-size: 8px; max-width: 140px; line-height: 1.7; } }
+</style>

@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { team } from '../../data/team';
+---
+<BaseLayout title="Our Team | Intelligent Connectivity Group" description="Meet the Intelligent Connectivity Group research team." headerMode="glass" bodyClass="archive-light-theme">
+  <main class="publication-archive">
+    <section class="publication-hero">
+      <div class="container publication-hero-inner">
+        <h1 class="publication-title">Our Team</h1>
+        <p class="publication-lede">{team.filter(m => m.group === 'leadership').length} academic leads. {team.filter(m => m.group === 'postgraduate').length} postgraduate researchers. One connected community.</p>
+      </div>
+    </section>
+
+    <section class="section team-section">
+      <div class="container team-grid">
+        {team.map((member) => (
+          <a class="team-card" href={`/our-team/${member.slug}/`}>
+            <img class="team-img" src={member.img} alt={member.name} loading="lazy" />
+            <div class="team-overlay">
+              <p class="team-name" data-en={member.name} data-zh={member.nameZh ?? member.name}>{member.name}</p>
+              <p class="team-role" data-en={member.role} data-zh={member.roleZh}>{member.role}</p>
+
+            </div>
+          </a>
+        ))}
+
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .team-section {
+    padding-top: 0;
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 36px;
+    justify-content: center;
+    margin: 0 auto;
+  }
+
+  .team-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid #e0e6e9;
+    background: #fff;
+    box-shadow: 0 0 0 1px #d9dcdf, 0 10px 28px rgba(17, 24, 39, 0.13);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .team-card:hover {
+    transform: translateY(-4px);
+    border-color: #142d3b;
+    box-shadow: 0 0 0 1px #c9cdd1, 0 16px 38px rgba(17, 24, 39, 0.18);
+  }
+
+  .team-img {
+    display: block;
+    width: 100%;
+    height: 270px;
+    object-fit: cover;
+    object-position: center 20%;
+    transition: transform 0.3s ease;
+  }
+
+  .team-card:hover .team-img {
+    transform: scale(1.05);
+  }
+
+  .team-overlay {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    min-height: 112px;
+    background: #fff;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+
+  .team-card:hover .team-overlay {
+    opacity: 1;
+  }
+
+  .alumni-card .team-img {
+    filter: grayscale(0.2) brightness(0.82);
+    object-position: center;
+  }
+
+  .alumni-card .team-overlay {
+    opacity: 1;
+    background: linear-gradient(to top, rgba(5, 8, 12, 0.9) 0%, rgba(5, 8, 12, 0.22) 72%, transparent 100%);
+  }
+
+  .alumni-card .team-name {
+    font-size: 22px;
+    font-weight: 760;
+  }
+
+  @media (max-width: 1400px) {
+    .team-grid {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    }
+  }
+
+  .team-name {
+    margin: 0;
+    color: #142d3b;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .team-role {
+    margin: 4px 0 0;
+    color: #5b6d77;
+    font-size: 12px;
+  }
+
+  .team-desc {
+    margin: 6px 0 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+</style>

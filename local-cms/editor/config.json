@@ -1,0 +1,504 @@
+{
+  "backend": {
+    "name": "proxy",
+    "proxy_url": "/api/v1",
+    "branch": "main"
+  },
+  "load_config_file": false,
+  "media_folder": "public/assets/uploads",
+  "public_folder": "/assets/uploads",
+  "logo_url": "/assets/logo/icg.svg",
+  "display_url": "http://127.0.0.1:4321/",
+  "publish_mode": "simple",
+  "editor": {
+    "preview": false
+  },
+  "collections": [
+    {
+      "name": "members",
+      "label": "Members",
+      "label_singular": "Member",
+      "folder": "src/data/members",
+      "format": "json",
+      "extension": "json",
+      "create": true,
+      "identifier_field": "name",
+      "slug": "{{fields.slug}}",
+      "summary": "{{name}} \u00b7 {{role}}",
+      "sortable_fields": [
+        "order",
+        "name"
+      ],
+      "fields": [
+        {
+          "name": "slug",
+          "label": "Profile URL name",
+          "widget": "string",
+          "pattern": [
+            "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "Use lowercase words separated by hyphens."
+          ]
+        },
+        {
+          "name": "name",
+          "label": "Full name",
+          "widget": "string"
+        },
+        {
+          "name": "order",
+          "label": "Display order",
+          "widget": "number",
+          "value_type": "int",
+          "min": 1
+        },
+        {
+          "name": "group",
+          "label": "Member category",
+          "widget": "select",
+          "options": [
+            "leadership",
+            "postgraduate",
+            "member"
+          ]
+        },
+        {
+          "name": "role",
+          "label": "Role and title",
+          "widget": "string"
+        },
+        {
+          "name": "img",
+          "label": "Portrait",
+          "widget": "image",
+          "required": false,
+          "media_folder": "/public/assets/team",
+          "public_folder": "/assets/team"
+        },
+        {
+          "name": "desc",
+          "label": "Biography",
+          "widget": "text"
+        },
+        {
+          "name": "email",
+          "label": "Email",
+          "widget": "string",
+          "required": false
+        },
+        {
+          "name": "homepage",
+          "label": "UCT / personal profile",
+          "widget": "string",
+          "required": false
+        },
+        {
+          "name": "scholar",
+          "label": "Google Scholar URL",
+          "widget": "string",
+          "required": false
+        },
+        {
+          "name": "orcid",
+          "label": "ORCID URL",
+          "widget": "string",
+          "required": false
+        },
+        {
+          "name": "publicationNames",
+          "label": "Names used on publications",
+          "widget": "list",
+          "required": false
+        },
+        {
+          "name": "honors",
+          "label": "Honours",
+          "widget": "list",
+          "required": false
+        },
+        {
+          "name": "personal",
+          "label": "Outside research",
+          "widget": "text",
+          "required": false
+        },
+        {
+          "name": "draft",
+          "label": "Hide profile",
+          "widget": "boolean",
+          "default": false,
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "settings",
+      "label": "Website",
+      "files": [
+        {
+          "name": "site",
+          "label": "Identity & homepage",
+          "file": "src/data/site.json",
+          "fields": [
+            {
+              "name": "name",
+              "label": "Group name",
+              "widget": "string"
+            },
+            {
+              "name": "department",
+              "label": "Department",
+              "widget": "string"
+            },
+            {
+              "name": "university",
+              "label": "University",
+              "widget": "string"
+            },
+            {
+              "name": "address",
+              "label": "Postal address",
+              "widget": "text"
+            },
+            {
+              "name": "logo",
+              "label": "Group logo",
+              "widget": "image",
+              "media_folder": "/public/assets/logo",
+              "public_folder": "/assets/logo"
+            },
+            {
+              "name": "heroEyebrow",
+              "label": "Hero affiliation line",
+              "widget": "string"
+            },
+            {
+              "name": "heroTitle",
+              "label": "Hero headline",
+              "widget": "text"
+            },
+            {
+              "name": "heroDescription",
+              "label": "Hero introduction",
+              "widget": "text"
+            },
+            {
+              "name": "researchIntro",
+              "label": "Research introduction",
+              "widget": "text"
+            },
+            {
+              "name": "contactEmail",
+              "label": "Group contact email",
+              "widget": "string"
+            }
+          ]
+        },
+        {
+          "name": "research",
+          "label": "Research themes",
+          "file": "src/data/research.json",
+          "fields": [
+            {
+              "name": "directions",
+              "label": "Research themes",
+              "widget": "list",
+              "summary": "{{fields.title}}",
+              "min": 4,
+              "max": 4,
+              "fields": [
+                {
+                  "name": "id",
+                  "label": "Theme ID",
+                  "widget": "select",
+                  "options": [
+                    {
+                      "label": "Software-defined & 5G networks",
+                      "value": "software-networks"
+                    },
+                    {
+                      "label": "Intelligent network management",
+                      "value": "network-intelligence"
+                    },
+                    {
+                      "label": "IoT & connected sensing",
+                      "value": "iot-systems"
+                    },
+                    {
+                      "label": "Secure cyber-physical systems",
+                      "value": "network-security"
+                    }
+                  ]
+                },
+                {
+                  "name": "number",
+                  "label": "Display number",
+                  "widget": "string"
+                },
+                {
+                  "name": "title",
+                  "label": "Title",
+                  "widget": "string"
+                },
+                {
+                  "name": "description",
+                  "label": "Description",
+                  "widget": "text"
+                },
+                {
+                  "name": "image",
+                  "label": "Cover image",
+                  "widget": "image",
+                  "media_folder": "/public/assets/research",
+                  "public_folder": "/assets/research"
+                },
+                {
+                  "name": "alt",
+                  "label": "Image description",
+                  "widget": "string"
+                },
+                {
+                  "name": "lead",
+                  "label": "Research leadership",
+                  "widget": "string"
+                },
+                {
+                  "name": "sources",
+                  "label": "Source publications",
+                  "widget": "list",
+                  "fields": [
+                    {
+                      "name": "label",
+                      "label": "Link label",
+                      "widget": "string"
+                    },
+                    {
+                      "name": "url",
+                      "label": "DOI or source URL",
+                      "widget": "string"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "publications",
+      "label": "Publications",
+      "label_singular": "Publication",
+      "folder": "src/content/publications",
+      "create": true,
+      "format": "frontmatter",
+      "extension": "md",
+      "slug": "{{slug}}",
+      "preview_path": "publications/{{slug}}/",
+      "fields": [
+        {
+          "name": "title",
+          "label": "Title",
+          "widget": "string"
+        },
+        {
+          "name": "description",
+          "label": "Summary",
+          "widget": "text"
+        },
+        {
+          "name": "pubDate",
+          "label": "Date",
+          "widget": "datetime",
+          "date_format": "YYYY-MM-DD",
+          "time_format": false,
+          "format": "YYYY-MM-DD"
+        },
+        {
+          "name": "researchAreas",
+          "label": "Research themes",
+          "widget": "select",
+          "options": [
+            {
+              "label": "Software-defined & 5G networks",
+              "value": "software-networks"
+            },
+            {
+              "label": "Intelligent network management",
+              "value": "network-intelligence"
+            },
+            {
+              "label": "IoT & connected sensing",
+              "value": "iot-systems"
+            },
+            {
+              "label": "Secure cyber-physical systems",
+              "value": "network-security"
+            }
+          ],
+          "multiple": true,
+          "min": 1
+        },
+        {
+          "name": "tags",
+          "label": "Tags",
+          "widget": "list",
+          "required": false
+        },
+        {
+          "name": "draft",
+          "label": "Draft (hide from website)",
+          "widget": "boolean",
+          "default": true
+        },
+        {
+          "name": "image",
+          "label": "Cover image",
+          "widget": "image",
+          "required": false,
+          "media_folder": "/public/assets/uploads",
+          "public_folder": "/assets/uploads"
+        },
+        {
+          "name": "venue",
+          "label": "Journal / conference",
+          "widget": "string"
+        },
+        {
+          "name": "authors",
+          "label": "Authors",
+          "widget": "list"
+        },
+        {
+          "name": "paperUrl",
+          "label": "Paper URL",
+          "widget": "string",
+          "required": false
+        },
+        {
+          "name": "projectUrl",
+          "label": "Project URL",
+          "widget": "string",
+          "required": false
+        },
+        {
+          "name": "codeUrl",
+          "label": "Code URL",
+          "widget": "string",
+          "required": false
+        },
+        {
+          "name": "links",
+          "label": "Additional links",
+          "widget": "list",
+          "required": false,
+          "fields": [
+            {
+              "name": "label",
+              "label": "Label",
+              "widget": "string"
+            },
+            {
+              "name": "url",
+              "label": "Url",
+              "widget": "string"
+            }
+          ]
+        },
+        {
+          "name": "body",
+          "label": "Article",
+          "widget": "markdown",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "news",
+      "label": "News",
+      "label_singular": "News item",
+      "folder": "src/content/news",
+      "create": true,
+      "format": "frontmatter",
+      "extension": "md",
+      "slug": "{{slug}}",
+      "preview_path": "news/{{slug}}/",
+      "fields": [
+        {
+          "name": "title",
+          "label": "Title",
+          "widget": "string"
+        },
+        {
+          "name": "description",
+          "label": "Summary",
+          "widget": "text"
+        },
+        {
+          "name": "pubDate",
+          "label": "Date",
+          "widget": "datetime",
+          "date_format": "YYYY-MM-DD",
+          "time_format": false,
+          "format": "YYYY-MM-DD"
+        },
+        {
+          "name": "researchAreas",
+          "label": "Research themes",
+          "widget": "select",
+          "options": [
+            {
+              "label": "Software-defined & 5G networks",
+              "value": "software-networks"
+            },
+            {
+              "label": "Intelligent network management",
+              "value": "network-intelligence"
+            },
+            {
+              "label": "IoT & connected sensing",
+              "value": "iot-systems"
+            },
+            {
+              "label": "Secure cyber-physical systems",
+              "value": "network-security"
+            }
+          ],
+          "multiple": true,
+          "min": 1
+        },
+        {
+          "name": "tags",
+          "label": "Tags",
+          "widget": "list",
+          "required": false
+        },
+        {
+          "name": "draft",
+          "label": "Draft (hide from website)",
+          "widget": "boolean",
+          "default": true
+        },
+        {
+          "name": "image",
+          "label": "Cover image",
+          "widget": "image",
+          "required": false,
+          "media_folder": "/public/assets/uploads",
+          "public_folder": "/assets/uploads"
+        },
+        {
+          "name": "externalUrl",
+          "label": "External news URL",
+          "widget": "string",
+          "required": false
+        },
+        {
+          "name": "body",
+          "label": "Article",
+          "widget": "markdown",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

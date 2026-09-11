@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PublicationCard from '../../components/PublicationCard.astro';
+import { researchDirections } from '../../data/research';
+import { comparePublications } from '../../utils/publications';
+
+const publications = (await getCollection('publications'))
+  .filter((item) => !item.data.draft)
+  .sort(comparePublications);
+
+const categoryFilters = researchDirections
+  .filter((direction) => publications.some((item) => item.data.researchAreas?.includes(direction.id)))
+  .map((direction) => ({ id: direction.id, label: direction.title, labelZh: direction.titleZh }));
+---
+<BaseLayout title="Publications | Intelligent Connectivity Group" description="Research publications from the Intelligent Connectivity Group at UCT." headerMode="glass" bodyClass="archive-light-theme">
+  <main class="publication-archive">
+    <section class="publication-hero">
+      <div class="container publication-hero-inner">
+        <h1 class="publication-title">Publications</h1>
+        <p class="publication-lede">Research publications from the Intelligent Connectivity Group.</p>
+      </div>
+    </section>
+
+    <section class="section publication-results">
+      <div class="container">
+        <div class="publication-search-panel">
+          <label class="publication-search" for="publication-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M10.8 18.1a7.3 7.3 0 1 1 0-14.6 7.3 7.3 0 0 1 0 14.6Zm5.2-2.1 4.5 4.5" />
+            </svg>
+            <input id="publication-search" type="search" placeholder={`Search ${publications.length} papers...`} autocomplete="off" data-publication-search data-count={publications.length} data-i18n-placeholder-en={`Search {n} papers...`} data-i18n-placeholder-zh={`搜索 {n} 篇论文...`} />
+          </label>
+          <div class="filter-pills" aria-label="Publication filters">
+            <button class="filter-pill is-active" type="button" data-filter="all">All</button>
+            {categoryFilters.map((category) => (
+              <button class="filter-pill" type="button" data-filter={category.id} data-en={category.label} data-zh={category.labelZh}>{category.label}</button>
+            ))}
+          </div>
+        </div>
+
+        <div class="card-grid publication-grid" data-publication-grid>
+          {publications.map((item) => <PublicationCard item={item} />)}
+        </div>
+        <p class="empty-results" data-publication-empty-results hidden={publications.length > 0}>Our publication list is being prepared. Please check back soon.</p>
+      </div>
+    </section>
+  </main>
+  <script>
+    const publicationSearchInput = document.querySelector<HTMLInputElement>('[data-publication-search]');
+    const publicationFilterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+    const publicationCards = Array.from(document.querySelectorAll<HTMLElement>('[data-publication-card]'));
+    const publicationEmpty = document.querySelector<HTMLElement>('[data-publication-empty-results]');
+    let activePublicationFilter = 'all';
+
+    const applyPublicationFilters = () => {
+      const query = publicationSearchInput?.value.trim().toLowerCase() ?? '';
+      let visibleCount = 0;
+
+      publicationCards.forEach((card) => {
+        const text = card.dataset.search ?? '';
+        const filters = (card.dataset.filters ?? '').split('|').filter(Boolean);
+        const matchesQuery = !query || text.includes(query);
+        const matchesFilter = activePublicationFilter === 'all' || filters.includes(activePublicationFilter);
+        const isVisible = matchesQuery && matchesFilter;
+
+        card.toggleAttribute('hidden', !isVisible);
+        if (isVisible) visibleCount += 1;
+      });
+
+      if (publicationEmpty) publicationEmpty.hidden = visibleCount !== 0;
+    };
+
+    publicationSearchInput?.addEventListener('input', applyPublicationFilters);
+    publicationFilterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        activePublicationFilter = button.dataset.filter ?? 'all';
+        publicationFilterButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+        applyPublicationFilters();
+      });
+    });
+  </script>
+</BaseLayout>

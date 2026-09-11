@@ -1,0 +1,505 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ResearchFeedCard from './ResearchFeedCard.astro';
+import { researchDirections } from '../data/research';
+import site from '../data/site.json';
+import { comparePublications } from '../utils/publications';
+
+const publications = (await getCollection('publications'))
+  .filter((item) => !item.data.draft)
+  .sort(comparePublications);
+const newsItems = (await getCollection('news'))
+  .filter((item) => !item.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const panels = researchDirections.map((direction) => ({
+  direction,
+  publications: publications.filter((item) => item.data.researchAreas?.includes(direction.id)).slice(0, 3),
+  news: newsItems.filter((item) => item.data.researchAreas?.includes(direction.id)).slice(0, 3),
+}));
+---
+
+<BaseLayout
+  title="Research | Intelligent Connectivity Group"
+  description="Research directions, publications and news from Intelligent Connectivity Group."
+  headerMode="glass"
+  bodyClass="space-theme research-page"
+  showStars={false}
+>
+  <script is:inline>
+    if (/\/collections\/?$/.test(window.location.pathname)) {
+      const researchPath = window.location.pathname.replace(/\/collections\/?$/, '/research/');
+      window.location.replace(`${researchPath}${window.location.search}${window.location.hash}`);
+    }
+  </script>
+  <main class="research-hub" data-research-hub>
+    <section class="research-hub-hero" aria-labelledby="research-hub-title">
+      <div class="research-hub-inner">
+        <h1 id="research-hub-title">Research</h1>
+        <p
+          class="research-hub-description"
+        >{site.researchIntro}</p>
+      </div>
+    </section>
+
+    <section class="research-workspace" aria-label="Research directions">
+      <div class="research-hub-inner">
+        <div class="research-tabs" role="tablist" aria-label="Choose a research direction">
+          {researchDirections.map((direction, index) => (
+            <button
+              class:list={['research-tab', { 'is-active': index === 0 }]}
+              type="button"
+              role="tab"
+              id={`research-tab-${direction.id}`}
+              aria-controls={`research-panel-${direction.id}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              tabindex={index === 0 ? 0 : -1}
+              data-research-tab={direction.id}
+            >
+              <span>{direction.number}</span>
+              <strong data-en={direction.title} data-zh={direction.titleZh}>{direction.title}</strong>
+            </button>
+          ))}
+        </div>
+
+        {panels.map(({ direction, publications, news }, index) => (
+          <section
+            class="research-panel"
+            id={`research-panel-${direction.id}`}
+            role="tabpanel"
+            aria-labelledby={`research-tab-${direction.id}`}
+            data-research-panel={direction.id}
+            hidden={index !== 0}
+          >
+            <header class="research-panel-header">
+              <img src={direction.image} alt={direction.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+              <div class="research-panel-header-shade"></div>
+              <div class="research-panel-header-copy">
+                <span>{direction.number}</span>
+                <h2 data-en={direction.title} data-zh={direction.titleZh}>{direction.title}</h2>
+                <p data-en={direction.description} data-zh={direction.descriptionZh}>{direction.description}</p>
+              </div>
+            </header>
+            <div class="research-sources"><p><strong>Research leadership:</strong> {direction.lead}</p><span>Selected work:</span> {direction.sources.map(source => <a href={source.url} target="_blank" rel="noreferrer">{source.label} ↗</a>)}<a href="/our-team/">Supervisor profiles →</a></div>
+
+            <section class="research-feed" aria-labelledby={`research-publications-${direction.id}`}>
+              <header class="research-feed-header">
+                <h3 id={`research-publications-${direction.id}`}>Latest Publications</h3>
+                <a href="/publications/">View all publications <span aria-hidden="true">→</span></a>
+              </header>
+              {publications.length > 0 ? (
+                <div class="research-feed-grid">
+                  {publications.map((item) => <ResearchFeedCard item={item} kind="publication" />)}
+                </div>
+              ) : (
+                <p class="research-feed-empty">Publications for this direction will appear here.</p>
+              )}
+            </section>
+
+            <section class="research-feed" aria-labelledby={`research-news-${direction.id}`}>
+              <header class="research-feed-header">
+                <h3 id={`research-news-${direction.id}`}>Latest News</h3>
+                <a href="/news/">View all news <span aria-hidden="true">→</span></a>
+              </header>
+              {news.length > 0 ? (
+                <div class="research-feed-grid">
+                  {news.map((item) => <ResearchFeedCard item={item} kind="news" />)}
+                </div>
+              ) : (
+                <p class="research-feed-empty">News for this direction will appear here.</p>
+              )}
+            </section>
+          </section>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const initializeResearchHub = () => {
+      document.querySelectorAll<HTMLElement>('[data-research-hub]').forEach((hub) => {
+        if (hub.dataset.ready === 'true') return;
+        hub.dataset.ready = 'true';
+
+        const tabs = Array.from(hub.querySelectorAll<HTMLButtonElement>('[data-research-tab]'));
+        const panels = Array.from(hub.querySelectorAll<HTMLElement>('[data-research-panel]'));
+        const ids = tabs.map((tab) => tab.dataset.researchTab).filter(Boolean) as string[];
+
+        const activate = (requestedId: string | null, updateUrl = false) => {
+          const id = requestedId && ids.includes(requestedId) ? requestedId : ids[0];
+          if (!id) return;
+
+          tabs.forEach((tab) => {
+            const active = tab.dataset.researchTab === id;
+            tab.classList.toggle('is-active', active);
+            tab.setAttribute('aria-selected', String(active));
+            tab.tabIndex = active ? 0 : -1;
+          });
+          panels.forEach((panel) => {
+            panel.hidden = panel.dataset.researchPanel !== id;
+          });
+
+          if (updateUrl) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('direction', id);
+            window.history.pushState({ direction: id }, '', url);
+          }
+        };
+
+        tabs.forEach((tab, index) => {
+          tab.addEventListener('click', () => activate(tab.dataset.researchTab ?? null, true));
+          tab.addEventListener('keydown', (event) => {
+            if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+            event.preventDefault();
+            const offset = event.key === 'ArrowRight' ? 1 : -1;
+            const nextTab = tabs[(index + offset + tabs.length) % tabs.length];
+            nextTab.focus();
+            activate(nextTab.dataset.researchTab ?? null, true);
+          });
+        });
+
+        window.addEventListener('popstate', () => {
+          activate(new URLSearchParams(window.location.search).get('direction'));
+        });
+        activate(new URLSearchParams(window.location.search).get('direction'));
+      });
+    };
+
+    initializeResearchHub();
+    document.addEventListener('astro:page-load', initializeResearchHub);
+  </script>
+</BaseLayout>
+
+<style>
+  .research-hub {
+    color: #111;
+    background: #fff;
+  }
+
+  .research-hub-inner {
+    width: min(calc(100% - 96px), 1260px);
+    margin-inline: auto;
+  }
+
+  .research-hub-hero {
+    min-height: 500px;
+    padding: 142px 0 76px;
+    color: #fff;
+    background-color: #07090d;
+    background-image: url('/assets/research/research-hero.jpg');
+    background-position: center 27%;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .research-hub-hero .research-hub-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .research-hub-hero h1 {
+    margin: 0;
+    font-family: "Sora", sans-serif;
+    font-size: 64px;
+    font-weight: 820;
+    line-height: 1;
+    letter-spacing: 0;
+    text-shadow: 0 3px 24px rgba(0, 0, 0, 0.65);
+  }
+
+  .research-hub-description {
+    max-width: 780px;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 17px;
+    line-height: 1.6;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
+    transform: translateY(50px);
+  }
+
+  .research-workspace {
+    padding: 48px 0 120px;
+    background: #fff;
+  }
+
+  .research-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid #d9dcdf;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f3f4f5;
+  }
+
+  .research-tab {
+    display: grid;
+    min-width: 0;
+    min-height: 96px;
+    padding: 18px 20px;
+    border: 0;
+    border-right: 1px solid #d9dcdf;
+    align-content: center;
+    gap: 8px;
+    color: #555b61;
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .research-tab:last-child {
+    border-right: 0;
+  }
+
+  .research-tab > span {
+    color: #9a9ea3;
+    font-size: 11px;
+    font-weight: 760;
+  }
+
+  .research-tab strong {
+    font-family: "Sora", sans-serif;
+    font-size: 15px;
+    font-weight: 720;
+    line-height: 1.3;
+  }
+
+  .research-tab.is-active {
+    color: #fff;
+    background: #111;
+  }
+
+  .research-tab.is-active > span {
+    color: #ef4a45;
+  }
+
+  .research-tab:focus-visible {
+    position: relative;
+    z-index: 1;
+    outline: 3px solid #ef4a45;
+    outline-offset: -3px;
+  }
+
+  .research-panel[hidden] {
+    display: none;
+  }
+
+  .research-panel-header {
+    position: relative;
+    min-height: 380px;
+    margin-top: 40px;
+    overflow: hidden;
+    border-radius: 6px;
+    color: #fff;
+    background: #111;
+  }
+
+  .research-panel-header > img,
+  .research-panel-header-shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .research-panel-header > img {
+    object-fit: cover;
+  }
+
+  .research-panel-header-shade {
+    background: linear-gradient(90deg, rgba(3, 7, 12, 0.88) 0%, rgba(3, 7, 12, 0.58) 52%, rgba(3, 7, 12, 0.12) 100%);
+  }
+
+  .research-panel-header-copy {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    width: min(100%, 760px);
+    min-height: 380px;
+    padding: 54px;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .research-panel-header-copy > span {
+    color: #ef4a45;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .research-panel-header h2 {
+    margin: 14px 0 0;
+    font-family: "Sora", sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: 0;
+  }
+
+  .research-panel-header p {
+    max-width: 680px;
+    margin: 18px 0 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 17px;
+    line-height: 1.58;
+  }
+
+  .research-feed {
+    padding-top: 80px;
+  }
+
+  .research-feed + .research-feed {
+    margin-top: 80px;
+    border-top: 1px solid #dedfe1;
+  }
+
+  .research-feed-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 30px;
+  }
+
+  .research-feed-header h3 {
+    margin: 0;
+    font-family: "Sora", sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+
+  .research-feed-header a {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #252525;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .research-feed-header a:hover {
+    color: #c93430;
+  }
+
+  .research-feed-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .research-feed-empty {
+    margin: 0;
+    padding: 30px 0;
+    border-top: 1px solid #e1e3e5;
+    border-bottom: 1px solid #e1e3e5;
+    color: #73777c;
+    font-size: 15px;
+  }
+
+  @media (max-width: 900px) {
+    .research-hub-inner {
+      width: min(calc(100% - 48px), 840px);
+    }
+
+    .research-tabs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .research-tab:nth-child(2) {
+      border-right: 0;
+    }
+
+    .research-tab:nth-child(-n + 2) {
+      border-bottom: 1px solid #d9dcdf;
+    }
+
+    .research-feed-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .research-hub-inner {
+      width: calc(100% - 40px);
+    }
+
+    .research-hub-hero {
+      min-height: 420px;
+      padding: 122px 0 58px;
+      background-position: 56% 46%;
+    }
+
+    .research-hub-hero h1 {
+      font-size: 46px;
+    }
+
+    .research-workspace {
+      padding: 30px 0 80px;
+    }
+
+    .research-tabs {
+      grid-template-columns: 1fr;
+    }
+
+    .research-tab,
+    .research-tab:nth-child(2) {
+      min-height: 76px;
+      border-right: 0;
+      border-bottom: 1px solid #d9dcdf;
+    }
+
+    .research-tab:last-child {
+      border-bottom: 0;
+    }
+
+    .research-panel-header {
+      min-height: 440px;
+      margin-top: 28px;
+    }
+
+    .research-panel-header-shade {
+      background: linear-gradient(180deg, rgba(3, 7, 12, 0.14) 12%, rgba(3, 7, 12, 0.9) 100%);
+    }
+
+    .research-panel-header-copy {
+      min-height: 440px;
+      padding: 28px 24px;
+    }
+
+    .research-panel-header h2 {
+      font-size: 31px;
+    }
+
+    .research-panel-header p {
+      font-size: 15px;
+    }
+
+    .research-feed,
+    .research-feed + .research-feed {
+      padding-top: 60px;
+      margin-top: 60px;
+    }
+
+    .research-feed:first-of-type {
+      margin-top: 0;
+    }
+
+    .research-feed-header {
+      display: grid;
+      gap: 14px;
+    }
+
+    .research-feed-header h3 {
+      font-size: 28px;
+    }
+
+    .research-feed-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+</style>

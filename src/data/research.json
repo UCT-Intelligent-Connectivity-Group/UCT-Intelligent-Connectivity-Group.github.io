@@ -1,0 +1,64 @@
+{
+  "directions": [
+    {
+      "id": "software-networks",
+      "number": "01",
+      "title": "Software-defined & 5G networks",
+      "description": "Software-defined networking, virtualised network functions and open-source 5G testbeds. We study how network services can be deployed, measured and orchestrated.",
+      "image": "/assets/research/software-networks.jpg",
+      "alt": "Ethernet connections on network switches",
+      "lead": "Joyce Mwangama",
+      "sources": [
+        {
+          "label": "5G core benchmarking",
+          "url": "https://doi.org/10.1109/ACCESS.2024.3441725"
+        }
+      ]
+    },
+    {
+      "id": "network-intelligence",
+      "number": "02",
+      "title": "Intelligent network management",
+      "description": "Learning-based resource allocation, network slicing and service differentiation, including communication across terrestrial and non-terrestrial networks.",
+      "image": "/assets/research/network-intelligence.jpg",
+      "alt": "A network analyser measuring data transmission through a switch",
+      "lead": "Joyce Mwangama & Daniel Ramotsoela",
+      "sources": [
+        {
+          "label": "Intelligent end-to-end network slicing",
+          "url": "https://doi.org/10.1109/ACCESS.2024.3516051"
+        }
+      ]
+    },
+    {
+      "id": "iot-systems",
+      "number": "03",
+      "title": "IoT & connected sensing",
+      "description": "Wireless sensor networks and connected applications for digital health and smart infrastructure, with machine learning for sensor data and dependable communication.",
+      "image": "/assets/research/iot-systems.jpg",
+      "alt": "X-ray photograph of a heart-rate sensor circuit",
+      "lead": "Joyce Mwangama & Daniel Ramotsoela",
+      "sources": [
+        {
+          "label": "Machine learning-based virtual sensors",
+          "url": "https://doi.org/10.3390/jsan9020025"
+        }
+      ]
+    },
+    {
+      "id": "network-security",
+      "number": "04",
+      "title": "Secure cyber-physical systems",
+      "description": "Machine learning for intrusion and anomaly detection in industrial control systems, water distribution networks, microgrids and software-defined sensor networks.",
+      "image": "/assets/research/network-security.jpg",
+      "alt": "Programmable logic controllers and network wiring in an industrial control panel",
+      "lead": "Daniel Ramotsoela",
+      "sources": [
+        {
+          "label": "AI-driven intrusion detection",
+          "url": "https://doi.org/10.3390/ijerph19095367"
+        }
+      ]
+    }
+  ]
+}

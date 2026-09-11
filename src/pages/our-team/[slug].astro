@@ -1,0 +1,474 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { team } from '../../data/team';
+import { getPublicationPrimaryHref, getPublicationImage } from '../../utils/publications';
+
+export async function getStaticPaths() {
+  const normalizeAuthorName = (name: string) => name
+    .normalize('NFKD')
+    .replace(/\p{M}/gu, '')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
+    .toLowerCase();
+
+  const publications = (await getCollection('publications'))
+    .filter((publication) => !publication.data.draft)
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+  return team.map((member) => {
+    const authorNames = new Set(
+      [member.name, member.nameZh, ...(member.publicationNames ?? [])]
+        .filter((name): name is string => Boolean(name))
+        .map(normalizeAuthorName)
+    );
+    const pubs = publications.filter((publication) =>
+      publication.data.authors.some((author) => authorNames.has(normalizeAuthorName(author)))
+    );
+
+    return {
+      params: { slug: member.slug },
+      props: { member, pubs },
+    };
+  });
+}
+
+const publicationLinks = (publication: CollectionEntry<'publications'>) => {
+  const primaryUrl = getPublicationPrimaryHref(publication);
+  const primaryLabel = publication.data.paperSite || publication.data.projectUrl
+    ? { label: 'Project page', labelZh: '项目主页' }
+    : publication.data.paperUrl
+      ? { label: 'Paper', labelZh: '论文' }
+      : { label: 'View details', labelZh: '查看详情' };
+  const links = [
+    {
+      ...primaryLabel,
+      url: primaryUrl,
+    },
+    ...publication.data.links
+      .filter((link) => link.url !== primaryUrl)
+      .map((link) => ({ ...link, labelZh: link.label })),
+  ];
+
+  if (publication.data.paperUrl && publication.data.paperUrl !== primaryUrl) {
+    links.push({ label: 'Paper', labelZh: '论文', url: publication.data.paperUrl });
+  }
+  if (publication.data.codeUrl) {
+    links.push({ label: 'Code', labelZh: '代码', url: publication.data.codeUrl });
+  }
+
+  return links;
+};
+
+const { member, pubs } = Astro.props;
+const honors = member.honors;
+---
+<BaseLayout title={`${member.name} | Intelligent Connectivity Group`} description={`Profile page of ${member.name}.`} headerMode="glass" bodyClass="archive-light-theme">
+  <main class="publication-archive">
+    <section class="section member-page">
+      <div class="container">
+        <a class="member-back" href="/our-team/">← Back to Our Team</a>
+
+        <div class="member-header">
+          <div class="member-photo">
+            <img src={member.img} alt={member.name} />
+          </div>
+          <div class="member-info">
+            <h1 class="member-name" data-en={member.name} data-zh={member.nameZh ?? member.name}>{member.name}</h1>
+            <p class="member-role" data-en={member.role} data-zh={member.roleZh}>{member.role}</p>
+            <p class="member-desc" data-en={member.desc} data-zh={member.descZh}>{member.desc}</p>
+            <div class="member-social">
+              {member.orcid && <a class="member-social-link member-orcid" href={member.orcid} target="_blank" rel="noreferrer" aria-label="ORCID record"><img src="/assets/logo/orcid.png" alt="ORCID iD" width="24" height="24" /></a>}
+              {member.homepage && (
+                <a class="member-social-link" href={member.homepage} target="_blank" rel="noreferrer" aria-label="Homepage" title="Homepage">
+                  <img class="member-homepage-icon" src="/assets/icons/homepage.svg" alt="Homepage" />
+                </a>
+              )}
+              {member.email && (
+                <a class="member-social-link" href={`mailto:${member.email}`} aria-label="Email" title={member.email}>
+                  <img src="/assets/icons/gmail.svg" alt="Email" />
+                </a>
+              )}
+              {member.x && (
+                <a class="member-social-link" href={member.x} target="_blank" rel="noreferrer" aria-label="X" title="X">
+                  <img src="/assets/icons/x.svg" alt="X" />
+                </a>
+              )}
+              {member.github && (
+                <a class="member-social-link" href={member.github} target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub">
+                  <img src="/assets/icons/github.svg" alt="GitHub" />
+                </a>
+              )}
+              {member.scholar && (
+                <a class="member-social-link" href={member.scholar} target="_blank" rel="noreferrer" aria-label="Google Scholar" title="Google Scholar">
+                  <img src="/assets/icons/scholar.svg" alt="Google Scholar" />
+                </a>
+              )}
+              {member.huggingface && (
+                <a class="member-social-link" href={member.huggingface} target="_blank" rel="noreferrer" aria-label="Hugging Face" title="Hugging Face">
+                  <img src="/assets/icons/huggingface.svg" alt="Hugging Face" />
+                </a>
+              )}
+              {member.linkedin && (
+                <a class="member-social-link" href={member.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" title="LinkedIn">
+                  <img src="/assets/icons/linkedin.svg" alt="LinkedIn" />
+                </a>
+              )}
+              {member.facebook && (
+                <a class="member-social-link" href={member.facebook} target="_blank" rel="noreferrer" aria-label="Facebook" title="Facebook">
+                  <img src="/assets/icons/facebook.svg" alt="Facebook" />
+                </a>
+              )}
+              {member.instagram && (
+                <a class="member-social-link" href={member.instagram} target="_blank" rel="noreferrer" aria-label="Instagram" title="Instagram">
+                  <img src="/assets/icons/instagram.svg" alt="Instagram" />
+                </a>
+              )}
+              {member.wechat && (
+                <a class="member-social-link" href={`weixin://dl/chat?${member.wechat}`} aria-label="WeChat" title={`WeChat: ${member.wechat}`}>
+                  <img src="/assets/icons/wechat.svg" alt="WeChat" />
+                </a>
+              )}
+              {member.weibo && (
+                <a class="member-social-link" href={member.weibo} target="_blank" rel="noreferrer" aria-label="Weibo" title="Weibo">
+                  <img src="/assets/icons/weibo.svg" alt="Weibo" />
+                </a>
+              )}
+              {member.bilibili && (
+                <a class="member-social-link" href={member.bilibili} target="_blank" rel="noreferrer" aria-label="Bilibili" title="Bilibili">
+                  <img src="/assets/icons/bilibili.svg" alt="Bilibili" />
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <!-- Publications -->
+        <div class="member-section">
+          <h2 class="member-section-title">Publications <span class="pub-count">{pubs.length}</span></h2>
+          {pubs.length > 0 ? (
+            <div class="pub-list">
+              {pubs.map((pub) => (
+                <article class="pub-item">
+                  <a class="pub-thumb" href={getPublicationPrimaryHref(pub)}>
+                    <img src={getPublicationImage(pub)} alt="" loading="lazy" decoding="async" />
+                  </a>
+                  <div class="pub-info">
+                    <a class="pub-title" href={getPublicationPrimaryHref(pub)}>{pub.data.title}</a>
+                    <p class="pub-authors">{pub.data.authors.join(', ')}</p>
+                    <p class="pub-venue">{pub.data.venue}</p>
+                    <div class="pub-links">
+                      {publicationLinks(pub).map((link) => (
+                        <a
+                          class="pub-link"
+                          href={link.url}
+                          target={link.url.startsWith('http') ? '_blank' : undefined}
+                          rel={link.url.startsWith('http') ? 'noreferrer' : undefined}
+                          data-en={link.label}
+                          data-zh={link.labelZh}
+                        >{link.label}</a>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p
+              class="pub-empty"
+            >No publications linked to this profile yet.</p>
+          )}
+        </div>
+
+        <!-- Honors & Awards -->
+        {honors.length > 0 && (
+          <div class="member-section">
+            <h2 class="member-section-title">Honors & Awards</h2>
+            <ul class="member-list">
+              {honors.map((h, i) => <li data-en={h} data-zh={member.honorsZh[i] || h}>{h}</li>)}
+            </ul>
+          </div>
+        )}
+
+        <!-- Personal -->
+        {member.personal && (
+          <div class="member-section">
+            <h2 class="member-section-title">Personal</h2>
+            <p class="member-text" data-en={member.personal} data-zh={member.personalZh}>{member.personal}</p>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .member-page {
+    padding-top: 120px;
+    min-height: 80vh;
+  }
+
+  .member-back {
+    display: inline-block;
+    color: #6d7379;
+    font-size: 14px;
+    text-decoration: none;
+    margin-bottom: 32px;
+    transition: color 0.2s;
+  }
+
+  .member-back:hover {
+    color: #111;
+  }
+
+  .member-header {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    margin-bottom: 48px;
+  }
+
+  .member-photo {
+    flex-shrink: 0;
+    width: 320px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 8px solid #fff;
+    background: #fff;
+    box-shadow: 0 0 0 1px #d9dcdf, 0 12px 32px rgba(17, 24, 39, 0.15);
+  }
+
+  .member-photo img {
+    width: 100%;
+    display: block;
+  }
+
+  .member-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 8px;
+    flex: 1;
+  }
+
+  .member-name {
+    margin: 0;
+    color: #111;
+    font-size: clamp(30px, 3.5vw, 44px);
+    font-weight: 600;
+  }
+
+  .member-role {
+    margin: 0;
+    color: #555b61;
+    font-size: 16px;
+  }
+
+  .member-desc {
+    margin: 8px 0 0;
+    color: #666c72;
+    font-size: 15px;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+
+  .member-social {
+    display: flex;
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  .member-social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #d9dcdf;
+    background: #f5f6f7;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .member-social-link:hover {
+    transform: scale(1.1);
+    border-color: #b8bdc2;
+    box-shadow: 0 6px 18px rgba(17, 24, 39, 0.12);
+  }
+
+  .member-social-link img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .member-homepage-icon {
+    filter: invert(1);
+  }
+
+  .member-social-svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .member-section {
+    margin-bottom: 40px;
+    padding-top: 28px;
+    border-top: 1px solid #dfe2e5;
+  }
+
+  .member-section-title {
+    margin: 0 0 24px;
+    color: #111;
+    font-size: 22px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pub-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 12px;
+    background: #eceeef;
+    color: #555b61;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .pub-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .pub-item {
+    display: flex;
+    gap: 20px;
+    padding: 18px;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #dfe2e5;
+    transition: background 0.2s;
+  }
+
+  .pub-item:hover {
+    background: #f7f8f9;
+  }
+
+  .pub-thumb {
+    flex-shrink: 0;
+    width: 160px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #eceeef;
+  }
+
+  .pub-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pub-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    justify-content: center;
+    flex: 1;
+  }
+
+  .pub-title {
+    display: inline-block;
+    margin: 0;
+    color: #111;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .pub-authors {
+    margin: 0;
+    color: #666c72;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .pub-venue {
+    margin: 0;
+    color: #7a8086;
+    font-size: 13px;
+  }
+
+  .pub-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  .pub-link {
+    color: #b9322e;
+    font-size: 13px;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .pub-link:hover {
+    color: #8f201d;
+  }
+
+  .pub-empty {
+    margin: 0;
+    color: #6d7379;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .member-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .member-list li {
+    color: #555b61;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .member-text {
+    color: #555b61;
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  @media (max-width: 640px) {
+    .member-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .member-photo {
+      width: 220px;
+    }
+    .member-social {
+      justify-content: center;
+    }
+    .pub-item {
+      flex-direction: column;
+    }
+    .pub-thumb {
+      width: 100%;
+      height: 160px;
+    }
+  }
+</style>

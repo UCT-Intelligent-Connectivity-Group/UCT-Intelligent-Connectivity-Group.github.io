@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HomeHero from '../components/HomeHero.astro';
+import ResearchDirections from '../components/ResearchDirections.astro';
+import PeopleSection from '../components/PeopleSection.astro';
+import SupervisionContact from '../components/SupervisionContact.astro';
+import FeaturedNews from '../components/FeaturedNews.astro';
+import LatestPublications from '../components/LatestPublications.astro';
+import { comparePublications } from '../utils/publications';
+
+const newsItems = (await getCollection('news'))
+  .filter((item) => !item.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+
+const publications = (await getCollection('publications'))
+  .filter((item) => !item.data.draft)
+  .sort(comparePublications)
+  .slice(0, 3);
+
+---
+<BaseLayout title="Intelligent Connectivity Group" description="Intelligent Connectivity Group in the Department of Electrical Engineering at the University of Cape Town." headerMode="glass" bodyClass="space-theme home-page" showStars={false}>
+  <main>
+    <HomeHero />
+    <ResearchDirections />
+    <PeopleSection />
+    {newsItems.length > 0 && <FeaturedNews items={newsItems} />}
+    {publications.length > 0 && <LatestPublications items={publications} />}
+    <section class="icg-invitation"><div class="container"><p class="icg-eyebrow">RESEARCH WITH US</p><h2>Better connections.<br />New possibilities.</h2><SupervisionContact /><a class="icg-button" href="/join-us/">Join the group <span aria-hidden="true">↗</span></a></div></section>
+  </main>
+</BaseLayout>
