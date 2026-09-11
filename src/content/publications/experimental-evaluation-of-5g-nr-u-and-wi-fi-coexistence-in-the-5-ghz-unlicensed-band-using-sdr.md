@@ -27,5 +27,6 @@ image: /assets/uploads/11555418-fig-1-source-large.gif
 venue: 2026 IEEE Wireless Communications and Networking Conference Workshops (WCNCW)
 authors:
   - Innocent Nhlanhla Makhubela
+  - Joyce Mwangama
 paperUrl: https://ieeexplore.ieee.org/document/11555418
 ---
