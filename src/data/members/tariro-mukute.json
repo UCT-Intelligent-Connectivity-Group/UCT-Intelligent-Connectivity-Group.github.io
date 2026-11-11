@@ -1,11 +1,14 @@
 {
-  "slug": "tariro-mukute",
-  "name": "Tariro Mukute",
-  "role": "PhD candidate",
-  "img": "/assets/team/tariro-mukute.svg",
-  "desc": "PhD candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
-  "honors": [],
   "personal": "",
+  "img": "/assets/team/1681727484042.jpeg",
+  "scholar": "https://scholar.google.com/citations?hl=en&user=Ciuc3CoAAAAJ",
+  "honors": [],
+  "name": "Tariro Mukute",
+  "slug": "tariro-mukute",
   "order": 10,
+  "desc": "Tariro is a PhD candidate in the Intelligent Connectivity Group, researching a dynamic and autonomous 5G N6-LAN: the network between the 5G core and the internet, where operators chain services such as content filters, intrusion prevention and caches. Tariro's work makes these service function chains policy-driven and changeable at run time. Tariro is also a Senior 5G Researcher at phine.tech in Vienna and a maintainer of the OpenAirInterface (OAI) 5G Core Network.\n ",
+  "role": "PhD candidate",
+  "orcid": "https://orcid.org/0000-0003-1785-024X",
+  "email": "MKTTAR001@myuct.ac.za",
   "group": "postgraduate"
 }
