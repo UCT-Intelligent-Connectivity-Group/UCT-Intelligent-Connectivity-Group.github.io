@@ -1,11 +1,11 @@
 {
-  "slug": "maurine-chepkoech",
-  "name": "Maurine Chepkoech",
-  "role": "PhD candidate",
-  "img": "/assets/team/maurine-chepkoech.svg",
-  "desc": "PhD candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
-  "honors": [],
   "personal": "",
+  "img": "/assets/team/whatsapp-image-2026-11-13-at-13.35.00.jpeg",
+  "honors": [],
+  "name": "Maurine Chepkoech",
+  "slug": "maurine-chepkoech",
   "order": 8,
+  "desc": "PhD candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
+  "role": "PhD candidate",
   "group": "postgraduate"
 }

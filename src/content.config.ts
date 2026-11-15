@@ -65,6 +65,7 @@ const news = defineCollection({
     tags: z.array(z.string()).default([]),
     researchAreas: z.array(z.enum(researchAreaIds)).min(1),
     image: z.string().default('/assets/research/software-networks.jpg').transform(value => value || '/assets/research/software-networks.jpg'),
+    featuredImages: z.array(z.string()).default([]),
     externalUrl: z.preprocess(value => value === '' ? undefined : value, z.string().url().optional()),
     draft: z.boolean().default(false)
   })

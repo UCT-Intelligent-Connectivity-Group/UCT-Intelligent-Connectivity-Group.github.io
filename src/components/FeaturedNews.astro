@@ -8,28 +8,26 @@ interface Props {
 
 const { items = [] } = Astro.props;
 
-const sourceSlides = items.map((item) => ({
-  id: item.id,
-  href: getContentPrimaryHref(item, 'news'),
-  titleEn: item.data.titleEn ?? item.data.title,
-  titleZh: item.data.titleZh ?? item.data.title,
-  descriptionEn: item.data.descriptionEn ?? item.data.description,
-  descriptionZh: item.data.descriptionZh ?? item.data.description,
-  image: item.data.image,
-  dateEn: item.data.pubDate.toLocaleDateString('en-US', {
-    month: 'long',
-    year: 'numeric',
-  }),
-  dateZh: item.data.pubDate.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-  }),
-}));
-
-// Keep the homepage carousel active while the News collection is still being populated.
-const slides = sourceSlides.length > 0 && sourceSlides.length < 5
-  ? Array.from({ length: 5 }, (_, index) => sourceSlides[index % sourceSlides.length])
-  : sourceSlides;
+const slides = items.flatMap((item) => {
+  const images = item.data.featuredImages.length > 0 ? item.data.featuredImages : [item.data.image];
+  return images.map((image, index) => ({
+    id: `${item.id}-${index}`,
+    href: getContentPrimaryHref(item, 'news'),
+    titleEn: item.data.titleEn ?? item.data.title,
+    titleZh: item.data.titleZh ?? item.data.title,
+    descriptionEn: item.data.descriptionEn ?? item.data.description,
+    descriptionZh: item.data.descriptionZh ?? item.data.description,
+    image,
+    dateEn: item.data.pubDate.toLocaleDateString('en-US', {
+      month: 'long',
+      year: 'numeric',
+    }),
+    dateZh: item.data.pubDate.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+    }),
+  }));
+});
 ---
 
 <section class="featured-news" id="news" aria-labelledby="featured-news-title">

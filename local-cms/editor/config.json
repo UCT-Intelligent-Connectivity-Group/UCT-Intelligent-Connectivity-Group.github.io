@@ -498,6 +498,20 @@
           "public_folder": "/assets/uploads"
         },
         {
+          "name": "featuredImages",
+          "label": "Homepage carousel images",
+          "widget": "list",
+          "required": false,
+          "hint": "Optional. Add different images to show as separate slides in Featured News on the homepage.",
+          "field": {
+            "name": "image",
+            "label": "Carousel image",
+            "widget": "image",
+            "media_folder": "/public/assets/uploads",
+            "public_folder": "/assets/uploads"
+          }
+        },
+        {
           "name": "externalUrl",
           "label": "External news URL",
           "widget": "string",
