@@ -98,6 +98,19 @@
           "required": false
         },
         {
+          "name": "scholarPublications",
+          "label": "Latest Google Scholar publications",
+          "widget": "list",
+          "required": false,
+          "fields": [
+            { "name": "title", "label": "Title", "widget": "string" },
+            { "name": "authors", "label": "Authors", "widget": "string" },
+            { "name": "venue", "label": "Journal or conference", "widget": "string" },
+            { "name": "year", "label": "Year", "widget": "string" },
+            { "name": "url", "label": "Publication URL", "widget": "string" }
+          ]
+        },
+        {
           "name": "orcid",
           "label": "ORCID URL",
           "widget": "string",

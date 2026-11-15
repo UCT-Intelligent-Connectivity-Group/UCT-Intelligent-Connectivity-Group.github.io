@@ -57,6 +57,29 @@ const publicationLinks = (publication: CollectionEntry<'publications'>) => {
 };
 
 const honors = member.honors;
+const scholarPublications = member.scholarPublications ?? [];
+const normalizePublicationTitle = (title: string) => title
+  .normalize('NFKD')
+  .replace(/\p{M}/gu, '')
+  .replace(/[^\p{L}\p{N}]+/gu, '')
+  .toLowerCase();
+
+const localPublicationTitles = new Set(pubs.map((publication) => normalizePublicationTitle(publication.data.title)));
+const profilePublications = [
+  ...pubs.map((publication) => ({
+    source: 'site' as const,
+    publication,
+    sortDate: publication.data.pubDate.valueOf(),
+  })),
+  ...scholarPublications
+    .filter((publication) => !localPublicationTitles.has(normalizePublicationTitle(publication.title)))
+    .map((publication, index) => ({
+      source: 'scholar' as const,
+      publication,
+      // Scholar supplies the year here; retain the profile order within each year.
+      sortDate: Date.UTC(Number(publication.year) || 0, 0, 1) - index,
+    })),
+].sort((a, b) => b.sortDate - a.sortDate);
 ---
 <BaseLayout title={`${member.name} | Intelligent Connectivity Group`} description={`Profile page of ${member.name}.`} headerMode="glass" bodyClass="archive-light-theme">
   <main class="publication-archive">
@@ -140,31 +163,33 @@ const honors = member.honors;
 
         <!-- Publications -->
         <div class="member-section">
-          <h2 class="member-section-title">Publications <span class="pub-count">{pubs.length}</span></h2>
-          {pubs.length > 0 ? (
+          <h2 class="member-section-title">Publications <span class="pub-count">{profilePublications.length}</span></h2>
+          {profilePublications.length > 0 ? (
             <div class="pub-list">
-              {pubs.map((pub) => (
+              {profilePublications.map((item) => item.source === 'site' ? (
                 <article class="pub-item">
-                  <a class="pub-thumb" href={getPublicationPrimaryHref(pub)}>
-                    <img src={getPublicationImage(pub)} alt="" loading="lazy" decoding="async" />
+                  <a class="pub-thumb" href={getPublicationPrimaryHref(item.publication)}>
+                    <img src={getPublicationImage(item.publication)} alt="" loading="lazy" decoding="async" />
                   </a>
                   <div class="pub-info">
-                    <a class="pub-title" href={getPublicationPrimaryHref(pub)}>{pub.data.title}</a>
-                    <p class="pub-authors">{pub.data.authors.join(', ')}</p>
-                    <p class="pub-venue">{pub.data.venue}</p>
-                    <PublicationSummary item={pub} />
+                    <a class="pub-title" href={getPublicationPrimaryHref(item.publication)}>{item.publication.data.title}</a>
+                    <p class="pub-authors">{item.publication.data.authors.join(', ')}</p>
+                    <p class="pub-venue">{item.publication.data.venue}</p>
+                    <PublicationSummary item={item.publication} />
                     <div class="pub-links">
-                      {publicationLinks(pub).map((link) => (
-                        <a
-                          class="pub-link"
-                          href={link.url}
-                          target={link.url.startsWith('http') ? '_blank' : undefined}
-                          rel={link.url.startsWith('http') ? 'noreferrer' : undefined}
-                          data-en={link.label}
-                          data-zh={link.labelZh}
-                        >{link.label}</a>
+                      {publicationLinks(item.publication).map((link) => (
+                        <a class="pub-link" href={link.url} target={link.url.startsWith('http') ? '_blank' : undefined} rel={link.url.startsWith('http') ? 'noreferrer' : undefined} data-en={link.label} data-zh={link.labelZh}>{link.label}</a>
                       ))}
                     </div>
+                  </div>
+                </article>
+              ) : (
+                <article class="pub-item pub-item--scholar">
+                  <div class="pub-info">
+                    <a class="pub-title" href={item.publication.url} target="_blank" rel="noreferrer">{item.publication.title}</a>
+                    <p class="pub-authors">{item.publication.authors}</p>
+                    <p class="pub-venue">{item.publication.venue} · {item.publication.year}</p>
+                    <div class="pub-links"><a class="pub-link" href={item.publication.url} target="_blank" rel="noreferrer">View on Google Scholar ↗</a></div>
                   </div>
                 </article>
               ))}
@@ -174,6 +199,7 @@ const honors = member.honors;
               class="pub-empty"
             >No publications linked to this profile yet.</p>
           )}
+          {member.scholar && scholarPublications.length > 0 && <a class="scholar-publication-all" href={member.scholar} target="_blank" rel="noreferrer">View all on Google Scholar ↗</a>}
         </div>
 
         <!-- Honors & Awards -->
@@ -425,6 +451,18 @@ const honors = member.honors;
     color: #6d7379;
     font-size: 15px;
     line-height: 1.6;
+  }
+
+  .scholar-publication-all:hover {
+    color: #b9322e;
+  }
+
+  .scholar-publication-all {
+    display: inline-block;
+    margin-top: 18px;
+    color: #111;
+    font-size: 14px;
+    font-weight: 650;
   }
 
   .member-list {

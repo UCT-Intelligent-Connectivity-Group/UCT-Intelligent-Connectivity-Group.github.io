@@ -1,19 +1,91 @@
 {
-  "slug": "daniel-ramotsoela",
-  "name": "Daniel Ramotsoela",
-  "role": "Associate Professor",
-  "img": "/assets/team/daniel-ramotsoela.jpg",
-  "desc": "Daniel studies network security, machine learning and wireless sensor networks. His research focuses on intrusion detection in critical infrastructure, including water systems and microgrids, and intelligent network resource allocation.",
-  "honors": [],
   "personal": "",
-  "order": 2,
-  "group": "leadership",
-  "email": "daniel.ramotsoela@uct.ac.za",
-  "homepage": "https://ebe.uct.ac.za/department-electrical-engineering/contacts/daniel-ramotsoela",
-  "orcid": "https://orcid.org/0000-0003-3672-5022",
+  "img": "/assets/team/daniel-ramotsoela.jpg",
   "scholar": "https://scholar.google.co.za/citations?hl=en&user=dcp5NQoAAAAJ",
+  "honors": [],
+  "name": "Daniel Ramotsoela",
+  "slug": "daniel-ramotsoela",
+  "scholarPublications": [
+    {
+      "title": "Mobility Management in 5G Heterogeneous Networks: A Scheme for Reducing Handover Failures",
+      "authors": "R Monaheng, D Ramotsoela, AA Lysko",
+      "venue": "2024 5th International Conference on Communication, Computing & Industry 6.0",
+      "year": "2024",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:7PzlFSSx8tAC"
+    },
+    {
+      "title": "A Decentralized E-Voting System Using Blockchain",
+      "authors": "L Vena, D Ramotsoela",
+      "venue": "International Information Security Conference, 196-205",
+      "year": "2024",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:ZeXyd9-uunAC"
+    },
+    {
+      "title": "Slice admission control in 5G wireless communication with multi-dimensional state space and distributed action space: A sequential twin actor-critic approach",
+      "authors": "MO Ojijo, D Ramotsoela, RA Oginga",
+      "venue": "Computer Networks 255, 110878",
+      "year": "2024",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:QIV2ME_5wuYC"
+    },
+    {
+      "title": "A Vision-Based People Identification System Using Gait Recognition for Industrial Environments",
+      "authors": "J Peyron, D Ramotsoela, G Hancke",
+      "venue": "2024 IEEE 22nd International Conference on Industrial Informatics (INDIN), 1-6",
+      "year": "2024",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:dhFuZR0502QC"
+    },
+    {
+      "title": "Radiofrequency electromagnetic radiation exposure assessment, analysis, computation, and minimization technique in 5G networks: A perspective on QoS trade-offs",
+      "authors": "AT Ajibare, SO Oladejo, SO Ekwe, LA Akinyemi, D Ramotsoela",
+      "venue": "SAIEE Africa Research Journal 114 (4), 114-127",
+      "year": "2023",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:9ZlFYXVOiuMC"
+    },
+    {
+      "title": "Multi-agent deep reinforcement learning for user association and resource allocation in integrated terrestrial and non-terrestrial networks",
+      "authors": "DJ Birabwa, D Ramotsoela, N Ventura",
+      "venue": "Computer Networks 231, 109827",
+      "year": "2023",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:Wp0gIr-vW9MC"
+    },
+    {
+      "title": "Hydraulic data preprocessing for machine learning-based intrusion detection in cyber-physical systems",
+      "authors": "IV Mboweni, DT Ramotsoela, AM Abu-Mahfouz",
+      "venue": "Mathematics 11 (8), 1846",
+      "year": "2023",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:4DMP91E08xMC"
+    },
+    {
+      "title": "Practical challenges of attack detection in microgrids using machine learning",
+      "authors": "DT Ramotsoela, GP Hancke, AM Abu-Mahfouz",
+      "venue": "Journal of Sensor and Actuator Networks 12 (1), 7",
+      "year": "2023",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:M3ejUd6NZC8C"
+    },
+    {
+      "title": "Intrusion detection in water distribution systems using machine learning techniques",
+      "authors": "N Mabunda, DT Ramotsoela, AM Abu-Mahfouz",
+      "venue": "2022 International Conference on Artificial Intelligence of Things (ICAIoT), 1-6",
+      "year": "2022",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:YOwf2qJgpHMC"
+    },
+    {
+      "title": "Considering the Connectivity Options for a Smart Water Management System Deployment",
+      "authors": "Albert A Lysko, Lwando Ngcama, Rhulani Shingwenyana, Daniel Ramotsoela",
+      "venue": "3rd International Conference on Communication, Computing and Industry 4.0 (C2I4)",
+      "year": "2022",
+      "url": "https://scholar.google.com/citations?view_op=view_citation&hl=en&user=dcp5NQoAAAAJ&sortby=pubdate&citation_for_view=dcp5NQoAAAAJ:qxL8FJ1GzNcC"
+    }
+  ],
+  "order": 2,
+  "homepage": "https://ebe.uct.ac.za/department-electrical-engineering/contacts/daniel-ramotsoela",
+  "desc": "Daniel studies network security, machine learning and wireless sensor networks. His research focuses on intrusion detection in critical infrastructure, including water systems and microgrids, and intelligent network resource allocation.",
+  "role": "Associate Professor",
+  "orcid": "https://orcid.org/0000-0003-3672-5022",
   "publicationNames": [
     "Daniel Ramotsoela",
     "Daniel T. Ramotsoela"
-  ]
+  ],
+  "email": "daniel.ramotsoela@uct.ac.za",
+  "group": "leadership"
 }

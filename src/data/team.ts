@@ -27,10 +27,17 @@ export interface TeamMember {
   honorsZh: string[];
   personal: string;
   personalZh: string;
+  scholarPublications?: Array<{
+    title: string;
+    authors: string;
+    venue: string;
+    year: string;
+    url: string;
+  }>;
 }
 
 const records = import.meta.glob('./members/*.json', { eager: true, import: 'default' });
 export const team: TeamMember[] = Object.values(records)
-  .map((record) => { const m = record as TeamMember & { draft?: boolean }; return { ...m, img: m.img || '/assets/logo/icg-icon.svg', roleZh: m.role, descZh: m.desc, honors: m.honors ?? [], honorsZh: m.honors ?? [], personal: m.personal ?? '', personalZh: m.personal ?? '' }; })
+  .map((record) => { const m = record as TeamMember & { draft?: boolean }; return { ...m, img: m.img || '/assets/logo/icg-icon.svg', roleZh: m.role, descZh: m.desc, honors: m.honors ?? [], honorsZh: m.honors ?? [], personal: m.personal ?? '', personalZh: m.personal ?? '', scholarPublications: m.scholarPublications ?? [] }; })
   .filter(m => !m.draft)
   .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
