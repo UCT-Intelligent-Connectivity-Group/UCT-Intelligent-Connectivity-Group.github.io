@@ -1,11 +1,13 @@
 {
-  "slug": "molefi-makuebu",
-  "name": "Molefi Makuebu",
-  "role": "PhD candidate",
-  "img": "/assets/team/molefi-makuebu.svg",
-  "desc": "PhD candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
-  "honors": [],
   "personal": "",
+  "img": "/assets/team/file_pic-1-.png",
+  "honors": [],
+  "name": "Molefi Makuebu",
+  "slug": "molefi-makuebu",
   "order": 11,
+  "desc": "Molefi Makuebu is a PhD candidate in the Intelligent Connectivity Group at the University of Cape Town (UCT), South Africa. His research focuses on intelligent traffic classification, machine learning, and intent-aware resource allocation for 5G and beyond networks.\nResearch Interests: Network slicing, machine learning, deep learning, encrypted traffic classification, intent-aware network management, resource optimisation, and AI-native 5G/6G networks.",
+  "role": "PhD candidate",
+  "orcid": "https://orcid.org/0000-0002-2368-2564",
+  "email": "molefi.makuebu@uct.ac.za",
   "group": "postgraduate"
 }
