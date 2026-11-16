@@ -1,15 +1,15 @@
 {
-  "slug": "humphrey-otieno",
+  "personal": "",
+  "img": "/assets/team/whatsapp-image-2026-11-16-at-06.43.07.jpeg",
+  "honors": [],
   "name": "Humphrey Otieno",
+  "slug": "humphrey-otieno",
+  "order": 9,
+  "desc": "PhD candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
+  "role": "PhD candidate",
   "publicationNames": [
     "Humphrey Owuor",
     "Humphrey Owuor Otieno"
   ],
-  "role": "PhD candidate",
-  "img": "/assets/team/humphrey-otieno.svg",
-  "desc": "PhD candidate in the Intelligent Connectivity Group, Department of Electrical Engineering, University of Cape Town.",
-  "honors": [],
-  "personal": "",
-  "order": 9,
   "group": "postgraduate"
 }
